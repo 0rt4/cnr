@@ -18,14 +18,21 @@ depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-core libuui
 nostrip=yes
 
 do_install() {
-    # vextract maneja nativamente la extracción de archivos .tar.xz
-    vextract "Heroic-${version}-linux-x64.tar.xz"
-    
-    # 1. Archivos Desktop e Iconos
-    # El .tar.xz oficial no incluye integracion con el escritorio de Linux nativa,
-    # por lo que generamos el .desktop e instalamos el icono desde los assets de Electron.
-    vmkdir usr/share/applications
-    cat > "${DESTDIR}/usr/share/applications/heroic.desktop" <<_EOF
+	# 1. Extraer directamente en /opt/Heroic con strip de la carpeta raíz
+	vmkdir opt/Heroic
+	tar -xf "${XBPS_SRCDISTDIR}/${pkgname}-${version}/Heroic-${version}-linux-x64.tar.xz" \
+		--strip-components=1 \
+		-C "${DESTDIR}/opt/Heroic"
+
+	# 2. Icono del sistema (ya está en ${DESTDIR}/opt/Heroic/resources/...)
+	vmkdir usr/share/icons/hicolor/512x512/apps
+	cp "${DESTDIR}/opt/Heroic/resources/app.asar.unpacked/build/icon.png" \
+		"${DESTDIR}/usr/share/icons/hicolor/512x512/apps/heroic.png"
+	chmod 644 "${DESTDIR}/usr/share/icons/hicolor/512x512/apps/heroic.png"
+
+	# 3. Archivo .desktop (el tarball no lo incluye)
+	vmkdir usr/share/applications
+	cat > "${DESTDIR}/usr/share/applications/heroic.desktop" <<_EOF
 [Desktop Entry]
 Name=Heroic Games Launcher
 Comment=An Open Source Launcher for GOG, Epic Games and Amazon Games
@@ -37,25 +44,18 @@ Categories=Game;
 StartupWMClass=Heroic
 _EOF
 
-    vmkdir usr/share/icons/hicolor/512x512/apps
-    vinstall "Heroic-${version}-linux-x64/resources/app.asar.unpacked/build/icon.png" 644 usr/share/icons/hicolor/512x512/apps heroic.png
+	# 4. Perfil de AppArmor (opcional, por trazabilidad)
+	if [ -f "${DESTDIR}/opt/Heroic/resources/apparmor-profile" ]; then
+		vmkdir etc/apparmor.d
+		cp "${DESTDIR}/opt/Heroic/resources/apparmor-profile" \
+			"${DESTDIR}/etc/apparmor.d/heroic"
+		chmod 644 "${DESTDIR}/etc/apparmor.d/heroic"
+	fi
 
-    # 2. Perfil de AppArmor (Opcional pero incluido por trazabilidad)
-    if [ -f "Heroic-${version}-linux-x64/resources/apparmor-profile" ]; then
-        vmkdir etc/apparmor.d
-        vinstall "Heroic-${version}-linux-x64/resources/apparmor-profile" 644 etc/apparmor.d heroic
-    fi
+	# 5. Enlace simbólico para ejecución global
+	vmkdir usr/bin
+	ln -sf /opt/Heroic/heroic "${DESTDIR}/usr/bin/heroic"
 
-    # 3. Instalación del núcleo de la aplicación
-    # Movemos la carpeta extraída por el tarball a su ubicación final
-    vmkdir opt
-    mv "Heroic-${version}-linux-x64" "${DESTDIR}/opt/Heroic"
-
-    # 4. Enlace simbólico para ejecución global
-    vmkdir usr/bin
-    ln -sf /opt/Heroic/heroic "${DESTDIR}/usr/bin/heroic"
-
-    # 5. Seguridad (Chrome Sandbox)
-    # Se aplica el permiso SUID para asegurar el aislamiento de procesos de Electron
-    chmod 4755 "${DESTDIR}/opt/Heroic/chrome-sandbox"
+	# 6. Seguridad (Chrome Sandbox): SUID para aislamiento de procesos de Electron
+	chmod 4755 "${DESTDIR}/opt/Heroic/chrome-sandbox"
 }
