@@ -1,5 +1,5 @@
 pkgname=hydra-launcher
-version=4.1.3
+version=4.1.4
 revision=1
 archs="x86_64"
 create_wrksrc=yes
@@ -12,7 +12,7 @@ maintainer="ANOMALI0x00 <ANOMALI0x00@users.noreply.github.com>"
 license="MIT"
 homepage="https://github.com/hydralauncher/hydra"
 distfiles="https://github.com/hydralauncher/hydra/releases/download/v${version}/hydralauncher_${version}_amd64.deb"
-checksum=2c69e437143c680f124c967259eedcb3314f2681e7f6d69f03a30799582d80ae
+checksum=73dfe7d1586658a0bfe9df942bd2d2a0643d468523def6c050fdbeb9bf0c931c
 
 nostrip=yes
 noshlibextract=yes
