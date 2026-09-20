@@ -4,7 +4,7 @@ A collection of NEKO VOID templates for xbps-src
 example
 
 ``` 
-sudo xbps-install  -S --repository=https://sourceforge.net/projects/neko-void/files/repo steam-nk
+sudo xbps-install  -S --repository=https://github.com/Neko-Void-Linux/repo-neko/releases/download/stable steam-nk
 ```
 ### Run on void-packages for compile (goverlay-bin and mangowc-latest)
 ```
