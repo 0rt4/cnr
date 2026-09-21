@@ -10,6 +10,7 @@ distfiles="https://github.com/OrcaSlicer/OrcaSlicer/releases/download/v${version
 checksum="d12fb8c8eac1aecd2dfb6377acd48f994f8fa439ed5292fa532dd82880f029fd"
 skip_extraction="OrcaSlicer_Linux_AppImage_Ubuntu2404_V${version}.AppImage"
 nostrip=yes
+noshlibprovides=yes
 
 post_extract() {
 	cp "${XBPS_SRCDISTDIR}/${pkgname}-${version}/OrcaSlicer_Linux_AppImage_Ubuntu2404_V${version}.AppImage" .
