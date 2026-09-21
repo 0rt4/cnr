@@ -1,4 +1,3 @@
-# Template file for 'python3-vdf-dev'
 pkgname=python3-vdf-dev
 version=4.0
 revision=1

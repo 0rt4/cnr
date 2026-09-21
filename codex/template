@@ -1,4 +1,3 @@
-# Template file for 'codex'
 pkgname=codex
 version=26.915.31945
 revision=1
@@ -26,7 +25,6 @@ nopie=yes
 do_install() {
 	vextract "chatgpt_${version}_amd64.deb"
 
-	# Exponer las herramientas de Codex en el PATH del sistema.
 	if [ -x usr/lib/chatgpt/resources/codex ]; then
 		vmkdir usr/bin
 		ln -sf /usr/lib/chatgpt/resources/codex "${DESTDIR}/usr/bin/codex"
@@ -37,13 +35,11 @@ do_install() {
 			"${DESTDIR}/usr/bin/codex-code-mode-host"
 	fi
 
-	# Normalizar permisos de los archivos de integración de escritorio.
 	[ ! -e usr/share/applications/chatgpt.desktop ] || \
 		chmod 0644 usr/share/applications/chatgpt.desktop
 	[ ! -e usr/share/pixmaps/chatgpt.png ] || \
 		chmod 0644 usr/share/pixmaps/chatgpt.png
 
-	# Registrar la licencia incluida en el paquete oficial.
 	[ ! -e usr/share/doc/chatgpt/copyright ] || \
 		vlicense usr/share/doc/chatgpt/copyright
 }

@@ -1,4 +1,3 @@
-# Template file for 'spicetify'
 pkgname=spicetify
 version=2.45.0
 revision=1
@@ -13,13 +12,10 @@ distfiles="https://github.com/spicetify/cli/archive/refs/tags/v${version}.tar.gz
 checksum=2e17c15a92093c62d011acd863f36148f8d5880292cadf41949eda320fd033c3
 
 post_install() {
-	# Instalamos los activos necesarios en una ruta global compartida
 	vmkdir usr/share/spicetify-cli
 	for d in Themes Extensions CustomApps jsHelper css-map.json globals.d.ts; do
 		vcopy "$d" usr/share/spicetify-cli
 	done
 
-	# El sistema de construcción de Go genera el binario como 'cli'
-	# Lo renombramos a 'spicetify' para que sea el comando estándar
 	mv ${DESTDIR}/usr/bin/cli ${DESTDIR}/usr/bin/spicetify
 }

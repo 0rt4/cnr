@@ -10,7 +10,6 @@ homepage="https://store.steampowered.com/about/"
 distfiles="https://codeberg.org/Neko-Void/STEAM-ALT-VOID/releases/download/deb-build/steam_latest.deb"
 checksum=b44634a6a604ca7c8b23809d0f2a921a0348bb2081c8cb8944116d0799872b70
 
-# binutils es necesario para el comando 'ar'
 hostmakedepends="binutils tar xz"
 
 depends="desktop-file-utils hicolor-icon-theme xdg-utils zenity bubblewrap
@@ -29,14 +28,11 @@ do_extract() {
 }
 
 do_install() {
-    # 1. Instalamos la estructura principal en /usr/lib/steam
     vmkdir usr/lib/steam
     vcopy usr/lib/steam/* usr/lib/steam/
 
-    # 2. Instalamos nuestro wrapper personalizado como el ejecutable principal
     vinstall ${FILESDIR}/steam-wrapper 755 usr/bin steam
 
-    # 3. Archivos de escritorio, iconos y documentación
     vmkdir usr/share
     for dir in applications doc icons man metainfo pixmaps; do
         if [ -d usr/share/$dir ]; then
@@ -44,15 +40,12 @@ do_install() {
         fi
     done
 
-    # 5. Límite de archivos para Proton (eventfd workaround)
     vmkdir etc/security/limits.d
     echo "* soft nofile 1048576" > ${DESTDIR}/etc/security/limits.d/99-steam.conf
     echo "* hard nofile 1048576" >> ${DESTDIR}/etc/security/limits.d/99-steam.conf
 
-    # 6. Garantizar la creación de /run/media en cada reinicio (tmpfiles)
     vmkdir usr/lib/tmpfiles.d
     echo "d /run/media 0755 root root -" > ${DESTDIR}/usr/lib/tmpfiles.d/steam-bin.conf
 
-    # 7. Licencia
     vlicense usr/share/doc/steam-launcher/copyright
 }

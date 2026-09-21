@@ -1,4 +1,3 @@
-# Template file for 'Neko-Wizard'
 pkgname=Neko-Wizard
 version=9.0.15
 revision=7
@@ -13,24 +12,19 @@ distfiles="https://github.com/Neko-Void-Linux/Neko-Wizard/releases/download/9.0.
 checksum="051a97bd01f618f2360f8b512aef1a77fcfe040f1cff8af5c6d6b70b66b79850"
 
 do_install() {
-	# Crear todos los directorios base necesarios primero
 	vmkdir usr/lib/Neko-Wizard
 	vmkdir usr/bin
 	vmkdir usr/share/applications
     vmkdir etc/xbps.d
-	# Instalar el binario compilado
 	vcopy build/neko-store usr/lib/Neko-Wizard/neko-store
 	chmod 755 "${DESTDIR}/usr/lib/Neko-Wizard/neko-store"
 
-	# Copiar las carpetas de recursos y data
 	vcopy resources usr/lib/Neko-Wizard/resources
     vcopy xbps.d/20-repository-neko.conf etc/xbps.d
 	vcopy data usr/lib/Neko-Wizard/data
 
-	# Enlace simbólico en /usr/bin
 	ln -s ../lib/Neko-Wizard/neko-store "${DESTDIR}/usr/bin/neko-store"
 
-	# Crear e instalar el archivo .desktop
 	cat > "${DESTDIR}/usr/share/applications/neko-store.desktop" << EOF
 [Desktop Entry]
 Type=Application
@@ -43,7 +37,6 @@ Terminal=false
 EOF
 	chmod 644 "${DESTDIR}/usr/share/applications/neko-store.desktop"
 
-	# Instalar licencia
 	if [ -f LICENSE ]; then
 		vlicense LICENSE
 	fi

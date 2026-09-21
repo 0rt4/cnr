@@ -1,4 +1,3 @@
-# Template file for 'waterfox'
 pkgname=waterfox
 version=6.7.3
 revision=1
@@ -16,10 +15,8 @@ nopie=yes
 do_install() {
 	vmkdir opt/waterfox
 	vcopy "*" opt/waterfox
-	# Create symlink in path
 	vmkdir usr/bin
 	ln -s /opt/waterfox/waterfox "${DESTDIR}/usr/bin/waterfox"
-	# Copy icon and .desktop file
 	vmkdir usr/share/pixmaps
 	vinstall "${DESTDIR}/opt/waterfox/browser/chrome/icons/default/default128.png" 644 \
 usr/share/pixmaps/ waterfox.png

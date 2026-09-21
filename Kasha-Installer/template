@@ -1,4 +1,3 @@
-# Template file for 'kasha-installer'
 pkgname=Kasha-Installer
 version=7.4
 revision=5
@@ -14,49 +13,40 @@ distfiles="https://codeberg.org/javiercplus/Kasha-Installer/archive/${version}.t
 checksum=b0cd5e30c5bec53e669f7a8c36c52d4e27e883bcf2d24cd07249dc1e79a753de
 
 do_configure() {
-	# No hay nada que configurar
 	:
 }
 
 do_build() {
 	cd ${wrksrc}
 	
-	# Flags de GTK+
 	GTK_CFLAGS=$(pkg-config --cflags gtk+-3.0)
 	GTK_LIBS=$(pkg-config --libs gtk+-3.0)
 	
-	# Directorio de cabeceras (está en include/)
 	HEADER_DIR="include"
 	
 	CFLAGS="-fstack-clash-protection -D_FORTIFY_SOURCE=2 -mtune=generic -O2 -pipe -I${HEADER_DIR} ${GTK_CFLAGS}"
 	
-	# Crear directorio para objetos
 	mkdir -p obj
 	
-	# Recopilar TODOS los archivos .c dentro de src/ (incluye core/, ui/, i18n/)
 	SOURCES=$(find src -name "*.c")
 	if [ -z "$SOURCES" ]; then
 		echo "ERROR: No se encontraron archivos fuente .c"
 		exit 1
 	fi
 	
-	# Compilar cada .c
 	for src in $SOURCES; do
 		obj="obj/$(basename ${src%.c}.o)"
 		${CC} $CFLAGS -c "$src" -o "$obj"
 	done
 	
-	# Enlazar todos los objetos
 	${CC} -o neko_installer obj/*.o ${GTK_LIBS}
 }
 
 do_install() {
 	cd ${wrksrc}
 	
-	# Binario principal
 	vbin neko_installer
 	
-	# Recursos (si existen)
 	if [ -d data ]; then
 		vmkdir usr/share/kasha
 		cp -r data/* ${DESTDIR}/usr/share/kasha/

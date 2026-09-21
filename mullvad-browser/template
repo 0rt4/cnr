@@ -1,4 +1,3 @@
-# Template file for 'mullvad-browser'
 pkgname=mullvad-browser
 version=15.0.21
 revision=1

@@ -1,4 +1,3 @@
-# Template file for 'python3-steam'
 pkgname=python3-steam
 version=2.0.0alpha1
 revision=1

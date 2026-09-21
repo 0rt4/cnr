@@ -1,4 +1,3 @@
-# Template file for 'faugus-launcher'
 pkgname=faugus-launcher
 version=2.3.0
 revision=1
